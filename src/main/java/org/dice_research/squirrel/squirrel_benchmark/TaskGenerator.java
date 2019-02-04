@@ -1,4 +1,4 @@
-package org.hobbit.sdk.examples.examplebenchmark.benchmark;
+package org.dice_research.squirrel.squirrel_benchmark;
 
 import org.hobbit.core.components.AbstractTaskGenerator;
 import org.slf4j.Logger;

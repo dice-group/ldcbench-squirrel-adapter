@@ -1,4 +1,4 @@
-package org.hobbit.sdk.examples.examplebenchmark.benchmark;
+package org.dice_research.squirrel.squirrel_benchmark;
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;

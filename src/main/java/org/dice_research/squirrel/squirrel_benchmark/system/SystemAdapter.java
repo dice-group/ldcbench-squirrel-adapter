@@ -1,4 +1,4 @@
-package org.hobbit.sdk.examples.examplebenchmark.system;
+package org.dice_research.squirrel.squirrel_benchmark.system;
 
 import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.Property;

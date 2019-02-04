@@ -1,4 +1,4 @@
-package org.hobbit.sdk.examples.examplebenchmark;
+package org.dice_research.squirrel.benchmark;
 
 
 /**

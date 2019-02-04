@@ -1,4 +1,4 @@
-package org.hobbit.sdk.examples.examplebenchmark.benchmark;
+package org.dice_research.squirrel.squirrel_benchmark;
 
 import org.hobbit.core.components.AbstractEvaluationStorage;
 import org.hobbit.core.components.test.InMemoryEvaluationStore;

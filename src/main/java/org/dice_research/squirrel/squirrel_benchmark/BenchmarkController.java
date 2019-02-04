@@ -1,4 +1,4 @@
-package org.hobbit.sdk.examples.examplebenchmark.benchmark;
+package org.dice_research.squirrel.squirrel_benchmark;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.jena.rdf.model.NodeIterator;
@@ -8,9 +8,9 @@ import org.hobbit.core.rabbit.RabbitMQUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+import static org.dice_research.squirrel.benchmark.Constants.*;
 
-import static org.hobbit.sdk.examples.examplebenchmark.Constants.*;
+import java.io.IOException;
 
 
 public class BenchmarkController extends AbstractBenchmarkController {

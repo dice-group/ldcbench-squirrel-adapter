@@ -1,12 +1,12 @@
-package org.hobbit.sdk.examples.examplebenchmark.benchmark;
+package org.dice_research.squirrel.squirrel_benchmark;
 
 import org.hobbit.core.components.AbstractDataGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+import static org.dice_research.squirrel.benchmark.Constants.BENCHMARK_URI;
 
-import static org.hobbit.sdk.examples.examplebenchmark.Constants.BENCHMARK_URI;
+import java.io.IOException;
 
 public class DataGenerator extends AbstractDataGenerator {
     private static final Logger logger = LoggerFactory.getLogger(DataGenerator.class);

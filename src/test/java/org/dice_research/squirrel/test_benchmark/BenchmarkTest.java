@@ -1,18 +1,17 @@
-package org.hobbit.sdk.examples.examplebenchmark;
+package org.dice_research.squirrel.test_benchmark;
 
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDF;
+import org.dice_research.squirrel.squirrel_benchmark.*;
+import org.dice_research.squirrel.squirrel_benchmark.system.SystemAdapter;
 import org.hobbit.core.components.Component;
 import org.hobbit.core.rabbit.RabbitMQUtils;
 import org.hobbit.sdk.docker.AbstractDockerizer;
 import org.hobbit.sdk.docker.RabbitMqDockerizer;
 import org.hobbit.sdk.docker.builders.*;
 import org.hobbit.sdk.docker.builders.hobbit.*;
-
-import org.hobbit.sdk.examples.examplebenchmark.benchmark.*;
-import org.hobbit.sdk.examples.examplebenchmark.system.SystemAdapter;
 import org.hobbit.sdk.utils.CommandQueueListener;
 import org.hobbit.sdk.utils.ComponentsExecutor;
 import org.hobbit.sdk.utils.ModelsHandler;
@@ -29,11 +28,11 @@ import java.io.IOException;
 import java.util.Date;
 
 import static org.apache.jena.rdf.model.ModelFactory.createDefaultModel;
+import static org.dice_research.squirrel.benchmark.Constants.*;
 import static org.hobbit.core.Constants.*;
 
 import static org.hobbit.sdk.Constants.BENCHMARK_URI;
 import static org.hobbit.sdk.Constants.GIT_USERNAME;
-import static org.hobbit.sdk.examples.examplebenchmark.Constants.*;
 
 /**
  * @author Pavel Smirnov
@@ -56,6 +55,10 @@ public class BenchmarkTest {
 
 
     public void init(Boolean useCachedImage) throws Exception {
+    	
+// uncomment this if you are running through ide	
+    	System.setProperty("sdkJarFilePath", "target/squirrel_benchmark-1.0.5.jar");
+
 
         benchmarkBuilder = new BenchmarkDockerBuilder(new ExampleDockersBuilder(BenchmarkController.class, BENCHMARK_IMAGE_NAME).useCachedImage(useCachedImage));
         dataGeneratorBuilder = new DataGenDockerBuilder(new ExampleDockersBuilder(DataGenerator.class, DATAGEN_IMAGE_NAME).useCachedImage(useCachedImage).addFileOrFolder("data"));

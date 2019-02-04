@@ -1,10 +1,10 @@
-package org.hobbit.sdk.examples.examplebenchmark;
+package org.dice_research.squirrel.test_benchmark;
 
+
+import static org.dice_research.squirrel.benchmark.Constants.*;
 
 import org.hobbit.core.run.ComponentStarter;
 import org.hobbit.sdk.docker.builders.DynamicDockerFileBuilder;
-
-import static org.hobbit.sdk.examples.examplebenchmark.Constants.*;
 
 /**
  * @author Pavel Smirnov
