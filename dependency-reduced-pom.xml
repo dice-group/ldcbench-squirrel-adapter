@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.dice_research.squirrel.adapter</groupId>
-  <artifactId>squirrel-adapter</artifactId>
-  <version>1.0.0</version>
+  <groupId>org.dice_research.squirrel</groupId>
+  <artifactId>squirrel_benchmark</artifactId>
+  <version>1.0.5</version>
   <build>
     <plugins>
       <plugin>
@@ -15,20 +15,21 @@
         </configuration>
       </plugin>
       <plugin>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.10.1</version>
+        <artifactId>maven-assembly-plugin</artifactId>
         <executions>
           <execution>
+            <id>make-assembly</id>
             <phase>package</phase>
             <goals>
-              <goal>jar</goal>
+              <goal>single</goal>
             </goals>
           </execution>
         </executions>
         <configuration>
-          <show>private</show>
-          <nohelp>true</nohelp>
-          <failOnError>false</failOnError>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+          <appendAssemblyId>false</appendAssemblyId>
         </configuration>
       </plugin>
       <plugin>
@@ -54,13 +55,69 @@
             </filter>
           </filters>
           <transformers>
-            <transformer />
+            <transformer>
+              <manifestEntries>
+                <X-Compile-Source-JDK>${maven.compiler.source}</X-Compile-Source-JDK>
+                <X-Compile-Target-JDK>${maven.compiler.target}</X-Compile-Target-JDK>
+              </manifestEntries>
+            </transformer>
             <transformer />
           </transformers>
         </configuration>
       </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.17</version>
+        <configuration>
+          <systemPropertyVariables>
+            <sdkJarFilePath>${project.build.directory}/${project.build.finalName}.jar</sdkJarFilePath>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <id>package</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>2.4.3</version>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>shade</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                  </excludes>
+                </filter>
+              </filters>
+              <transformers>
+                <transformer>
+                  <manifestEntries>
+                    <X-Compile-Source-JDK>${maven.compiler.source}</X-Compile-Source-JDK>
+                    <X-Compile-Target-JDK>${maven.compiler.target}</X-Compile-Target-JDK>
+                  </manifestEntries>
+                </transformer>
+                <transformer />
+              </transformers>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
   <repositories>
     <repository>
       <id>maven.aksw.internal</id>
@@ -72,11 +129,89 @@
       <name>University Leipzig, AKSW Maven2 Repository</name>
       <url>http://maven.aksw.org/repository/snapshots</url>
     </repository>
+    <repository>
+      <id>Apache Repo</id>
+      <name>Apache Repository</name>
+      <url>https://repository.apache.org/content/repositories/releases/</url>
+    </repository>
   </repositories>
+  <dependencies>
+    <dependency>
+      <groupId>org.hobbit</groupId>
+      <artifactId>hobbit-java-sdk</artifactId>
+      <version>1.1.17</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>core</artifactId>
+          <groupId>org.hobbit</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>json-simple</artifactId>
+          <groupId>com.googlecode.json-simple</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-compress</artifactId>
+          <groupId>org.apache.commons</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>docker-client</artifactId>
+          <groupId>com.spotify</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>junit</artifactId>
+          <groupId>junit</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>system-rules</artifactId>
+          <groupId>com.github.stefanbirkner</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>doxia-site-renderer</artifactId>
+          <groupId>org.apache.maven.doxia</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.hobbit</groupId>
+      <artifactId>platform-controller</artifactId>
+      <version>2.0.5</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>guava</artifactId>
+          <groupId>com.google.guava</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>lettuce</artifactId>
+          <groupId>biz.paluch.redis</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>netty-buffer</artifactId>
+          <groupId>io.netty</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>java-gitlab-api</artifactId>
+          <groupId>org.gitlab</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jackson-dataformat-yaml</artifactId>
+          <groupId>com.fasterxml.jackson.dataformat</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>docker-client</artifactId>
+          <groupId>com.spotify</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+  </dependencies>
   <properties>
+    <hobbit.sdk.version>1.1.17</hobbit.sdk.version>
+    <slf4j.version>1.7.15</slf4j.version>
     <maven.compiler.source>1.8</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.target>1.8</maven.compiler.target>
+    <junit.version>4.11</junit.version>
   </properties>
 </project>
 

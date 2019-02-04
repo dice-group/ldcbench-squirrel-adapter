@@ -1,8 +1,23 @@
-default: build
+install-deps:
+	mvn validate
 
-build:
-	docker-compose -f docker-compose.yml down
-	mvn clean install -U -DskipTests -Dmaven.javadoc.skip=true
+test-benchmark:
+	mvn -Dtest=BenchmarkTest#checkHealth test
 
-dockerize:
-	docker build -f Dockerfile -t adapter.squirrel .
+package:
+	mvn -DskipTests -DincludeDeps=true package
+
+build-images:
+	mvn -Dtest=BenchmarkTest#buildImages surefire:test
+
+test-dockerized-benchmark:
+	mvn -Dtest=BenchmarkTest#checkHealthDockerized test
+
+
+push-images:
+	sudo docker push git.project-hobbit.eu:4567/sdk-examples/sdk-example-benchmark/benchmark-controller
+	sudo docker push git.project-hobbit.eu:4567/sdk-examples/sdk-example-benchmark/datagen
+	sudo docker push git.project-hobbit.eu:4567/sdk-examples/sdk-example-benchmark/taskgen
+	sudo docker push git.project-hobbit.eu:4567/sdk-examples/sdk-example-benchmark/eval-storage
+	sudo docker push git.project-hobbit.eu:4567/sdk-examples/sdk-example-benchmark/system-adapter
+	sudo docker push git.project-hobbit.eu:4567/sdk-examples/sdk-example-benchmark/eval-module
