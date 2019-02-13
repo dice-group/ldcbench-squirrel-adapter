@@ -63,9 +63,7 @@ public class BenchmarkTest {
         benchmarkBuilder = new BenchmarkDockerBuilder(new ExampleDockersBuilder(BenchmarkController.class, BENCHMARK_IMAGE_NAME).useCachedImage(useCachedImage));
         dataGeneratorBuilder = new DataGenDockerBuilder(new ExampleDockersBuilder(DataGenerator.class, DATAGEN_IMAGE_NAME).useCachedImage(useCachedImage).addFileOrFolder("data"));
         taskGeneratorBuilder = new TaskGenDockerBuilder(new ExampleDockersBuilder(TaskGenerator.class, TASKGEN_IMAGE_NAME).useCachedImage(useCachedImage));
-
         evalStorageBuilder = new EvalStorageDockerBuilder(new ExampleDockersBuilder(EvalStorage.class, EVAL_STORAGE_IMAGE_NAME).useCachedImage(useCachedImage));
-
         systemAdapterBuilder = new SystemAdapterDockerBuilder(new ExampleDockersBuilder(SystemAdapter.class, SYSTEM_IMAGE_NAME).useCachedImage(useCachedImage));
         evalModuleBuilder = new EvalModuleDockerBuilder(new ExampleDockersBuilder(EvalModule.class, EVALMODULE_IMAGE_NAME).useCachedImage(useCachedImage));
 
@@ -94,7 +92,7 @@ public class BenchmarkTest {
 
     }
 
-    @Test
+//    @Test
     public void checkHealth() throws Exception {
         checkHealth(false);
     }
@@ -174,6 +172,7 @@ public class BenchmarkTest {
         commandQueueListener.setCommandReactions(
                 commandReactionsBuilder.containerCommandsReaction(), //comment this if you want to run containers on a platform instance (if the platform is running)
                 commandReactionsBuilder.benchmarkSignalsReaction()
+//                commandReactionsBuilder.
         );
 
         componentsExecutor.submit(commandQueueListener);

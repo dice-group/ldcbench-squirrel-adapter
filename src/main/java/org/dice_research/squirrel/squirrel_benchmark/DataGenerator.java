@@ -18,6 +18,8 @@ public class DataGenerator extends AbstractDataGenerator {
         // Always init the super class first!
         super.init();
         logger.debug("Init()");
+        logger.debug("DataGenerator INICIADO");
+
         // Your initialization code comes here...
 
         if(System.getenv().containsKey(BENCHMARK_URI+"#messages")){
@@ -45,8 +47,8 @@ public class DataGenerator extends AbstractDataGenerator {
             logger.debug("sendDataToTaskGenerator()->{}",data);
             sendDataToTaskGenerator(data.getBytes());
             // an to system adapter
-            //logger.debug("sendDataToSystemAdapter()->{}",data);
-            //sendDataToSystemAdapter(data.getBytes());
+            logger.debug("sendDataToSystemAdapter()->{}",data);
+            sendDataToSystemAdapter(data.getBytes());
         }
     }
 

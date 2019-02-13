@@ -10,4 +10,4 @@
     rdfs:label	"SDK Example System"@en;
 	rdfs:comment "Example system for SDK Example Benchmark"@en;
 	hobbit:implementsAPI <http://project-hobbit.eu/sdk-example-benchmark/API>;
-	hobbit:imageName "git.project-hobbit.eu:4567/sdk-examples/sdk-example-benchmark/system-adapter" .
+	hobbit:imageName "git.project-hobbit.eu:4567/squirrel/squirrel-benchmark/system-adapter" .
