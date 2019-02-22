@@ -4,8 +4,8 @@ package org.dice_research.squirrel.test_benchmark;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDF;
-import org.dice_research.squirrel.squirrel_benchmark.*;
-import org.dice_research.squirrel.squirrel_benchmark.system.SystemAdapter;
+import org.dice_research.squirrel.adapter.*;
+import org.dice_research.squirrel.adapter.system.SystemAdapter;
 import org.hobbit.core.components.Component;
 import org.hobbit.core.rabbit.RabbitMQUtils;
 import org.hobbit.sdk.docker.AbstractDockerizer;
@@ -34,10 +34,7 @@ import static org.hobbit.core.Constants.*;
 import static org.hobbit.sdk.Constants.BENCHMARK_URI;
 import static org.hobbit.sdk.Constants.GIT_USERNAME;
 
-/**
- * @author Pavel Smirnov
- */
-
+@Ignore
 public class BenchmarkTest {
 
     public final EnvironmentVariables environmentVariables = new EnvironmentVariables();
@@ -60,12 +57,12 @@ public class BenchmarkTest {
     	System.setProperty("sdkJarFilePath", "target/squirrel_benchmark-1.0.5.jar");
 
 
-        benchmarkBuilder = new BenchmarkDockerBuilder(new ExampleDockersBuilder(BenchmarkController.class, BENCHMARK_IMAGE_NAME).useCachedImage(useCachedImage));
-        dataGeneratorBuilder = new DataGenDockerBuilder(new ExampleDockersBuilder(DataGenerator.class, DATAGEN_IMAGE_NAME).useCachedImage(useCachedImage).addFileOrFolder("data"));
-        taskGeneratorBuilder = new TaskGenDockerBuilder(new ExampleDockersBuilder(TaskGenerator.class, TASKGEN_IMAGE_NAME).useCachedImage(useCachedImage));
-        evalStorageBuilder = new EvalStorageDockerBuilder(new ExampleDockersBuilder(EvalStorage.class, EVAL_STORAGE_IMAGE_NAME).useCachedImage(useCachedImage));
-        systemAdapterBuilder = new SystemAdapterDockerBuilder(new ExampleDockersBuilder(SystemAdapter.class, SYSTEM_IMAGE_NAME).useCachedImage(useCachedImage));
-        evalModuleBuilder = new EvalModuleDockerBuilder(new ExampleDockersBuilder(EvalModule.class, EVALMODULE_IMAGE_NAME).useCachedImage(useCachedImage));
+//        benchmarkBuilder = new BenchmarkDockerBuilder(new ExampleDockersBuilder(BenchmarkController.class, BENCHMARK_IMAGE_NAME).useCachedImage(useCachedImage));
+//        dataGeneratorBuilder = new DataGenDockerBuilder(new ExampleDockersBuilder(DataGenerator.class, DATAGEN_IMAGE_NAME).useCachedImage(useCachedImage).addFileOrFolder("data"));
+//        taskGeneratorBuilder = new TaskGenDockerBuilder(new ExampleDockersBuilder(TaskGenerator.class, TASKGEN_IMAGE_NAME).useCachedImage(useCachedImage));
+//        evalStorageBuilder = new EvalStorageDockerBuilder(new ExampleDockersBuilder(EvalStorage.class, EVAL_STORAGE_IMAGE_NAME).useCachedImage(useCachedImage));
+//        systemAdapterBuilder = new SystemAdapterDockerBuilder(new ExampleDockersBuilder(SystemAdapter.class, SYSTEM_IMAGE_NAME).useCachedImage(useCachedImage));
+//        evalModuleBuilder = new EvalModuleDockerBuilder(new ExampleDockersBuilder(EvalModule.class, EVALMODULE_IMAGE_NAME).useCachedImage(useCachedImage));
 
 //        benchmarkBuilder = new BenchmarkDockerBuilder(new PullBasedDockersBuilder(BENCHMARK_IMAGE_NAME));
 //        dataGeneratorBuilder = new DataGenDockerBuilder(new PullBasedDockersBuilder(DATAGEN_IMAGE_NAME));
@@ -135,21 +132,21 @@ public class BenchmarkTest {
         environmentVariables.set(HOBBIT_SESSION_ID_KEY, "session_"+String.valueOf(new Date().getTime()));
 
 
-        Component benchmarkController = new BenchmarkController();
-        Component dataGen = new DataGenerator();
-        Component taskGen = new TaskGenerator();
-        Component evalStorage = new EvalStorage();
-        Component systemAdapter = new SystemAdapter();
-        Component evalModule = new EvalModule();
+//        Component benchmarkController = new BenchmarkController();
+//        Component dataGen = new DataGenerator();
+//        Component taskGen = new TaskGenerator();
+//        Component evalStorage = new EvalStorage();
+//        Component systemAdapter = new SystemAdapter();
+//        Component evalModule = new EvalModule();
 
         if(dockerized) {
 
-            benchmarkController = benchmarkBuilder.build();
-            dataGen = dataGeneratorBuilder.build();
-            taskGen = taskGeneratorBuilder.build();
-            evalStorage = evalStorageBuilder.build();
-            evalModule = evalModuleBuilder.build();
-            systemAdapter = systemAdapterBuilder.build();
+//            benchmarkController = benchmarkBuilder.build();
+//            dataGen = dataGeneratorBuilder.build();
+//            taskGen = taskGeneratorBuilder.build();
+//            evalStorage = evalStorageBuilder.build();
+//            evalModule = evalModuleBuilder.build();
+//            systemAdapter = systemAdapterBuilder.build();
         }
 
         commandQueueListener = new CommandQueueListener();
@@ -158,22 +155,22 @@ public class BenchmarkTest {
         rabbitMqDockerizer.run();
 
 
-        //comment the .systemAdapter(systemAdapter) line below to use the code for running from python
-        CommandReactionsBuilder commandReactionsBuilder = new CommandReactionsBuilder(componentsExecutor, commandQueueListener)
-                        .benchmarkController(benchmarkController).benchmarkControllerImageName(BENCHMARK_IMAGE_NAME)
-                        .dataGenerator(dataGen).dataGeneratorImageName(dataGeneratorBuilder.getImageName())
-                        .taskGenerator(taskGen).taskGeneratorImageName(taskGeneratorBuilder.getImageName())
-                        .evalStorage(evalStorage).evalStorageImageName(evalStorageBuilder.getImageName())
-                        .evalModule(evalModule).evalModuleImageName(evalModuleBuilder.getImageName())
-                        .systemAdapter(systemAdapter).systemAdapterImageName(SYSTEM_IMAGE_NAME)
-                        //.customContainerImage(systemAdapter, DUMMY_SYSTEM_IMAGE_NAME)
+//        //comment the .systemAdapter(systemAdapter) line below to use the code for running from python
+//        CommandReactionsBuilder commandReactionsBuilder = new CommandReactionsBuilder(componentsExecutor, commandQueueListener)
+//                        .benchmarkController(benchmarkController).benchmarkControllerImageName(BENCHMARK_IMAGE_NAME)
+//                        .dataGenerator(dataGen).dataGeneratorImageName(dataGeneratorBuilder.getImageName())
+//                        .taskGenerator(taskGen).taskGeneratorImageName(taskGeneratorBuilder.getImageName())
+//                        .evalStorage(evalStorage).evalStorageImageName(evalStorageBuilder.getImageName())
+//                        .evalModule(evalModule).evalModuleImageName(evalModuleBuilder.getImageName())
+//                        .systemAdapter(systemAdapter).systemAdapterImageName(SYSTEM_IMAGE_NAME)
+//                        //.customContainerImage(systemAdapter, DUMMY_SYSTEM_IMAGE_NAME)
                 ;
 
-        commandQueueListener.setCommandReactions(
-                commandReactionsBuilder.containerCommandsReaction(), //comment this if you want to run containers on a platform instance (if the platform is running)
-                commandReactionsBuilder.benchmarkSignalsReaction()
-//                commandReactionsBuilder.
-        );
+//        commandQueueListener.setCommandReactions(
+//                commandReactionsBuilder.containerCommandsReaction(), //comment this if you want to run containers on a platform instance (if the platform is running)
+//                commandReactionsBuilder.benchmarkSignalsReaction()
+////                commandReactionsBuilder.
+//        );
 
         componentsExecutor.submit(commandQueueListener);
         commandQueueListener.waitForInitialisation();

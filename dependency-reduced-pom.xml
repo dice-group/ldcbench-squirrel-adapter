@@ -2,39 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.dice_research.squirrel</groupId>
-  <artifactId>squirrel_benchmark</artifactId>
+  <artifactId>squirrel-adapter</artifactId>
   <version>1.0.5</version>
   <build>
     <plugins>
       <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.5.1</version>
-        <configuration>
-          <source>${maven.compiler.source}</source>
-          <target>${maven.compiler.target}</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>make-assembly</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-          <appendAssemblyId>false</appendAssemblyId>
-        </configuration>
-      </plugin>
-      <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>2.4.3</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -43,81 +16,9 @@
             </goals>
           </execution>
         </executions>
-        <configuration>
-          <filters>
-            <filter>
-              <artifact>*:*</artifact>
-              <excludes>
-                <exclude>META-INF/*.SF</exclude>
-                <exclude>META-INF/*.DSA</exclude>
-                <exclude>META-INF/*.RSA</exclude>
-              </excludes>
-            </filter>
-          </filters>
-          <transformers>
-            <transformer>
-              <manifestEntries>
-                <X-Compile-Source-JDK>${maven.compiler.source}</X-Compile-Source-JDK>
-                <X-Compile-Target-JDK>${maven.compiler.target}</X-Compile-Target-JDK>
-              </manifestEntries>
-            </transformer>
-            <transformer />
-          </transformers>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.17</version>
-        <configuration>
-          <systemPropertyVariables>
-            <sdkJarFilePath>${project.build.directory}/${project.build.finalName}.jar</sdkJarFilePath>
-          </systemPropertyVariables>
-        </configuration>
       </plugin>
     </plugins>
   </build>
-  <profiles>
-    <profile>
-      <id>package</id>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-shade-plugin</artifactId>
-            <version>2.4.3</version>
-            <executions>
-              <execution>
-                <phase>package</phase>
-                <goals>
-                  <goal>shade</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <filters>
-                <filter>
-                  <artifact>*:*</artifact>
-                  <excludes>
-                    <exclude>META-INF/*.SF</exclude>
-                    <exclude>META-INF/*.DSA</exclude>
-                    <exclude>META-INF/*.RSA</exclude>
-                  </excludes>
-                </filter>
-              </filters>
-              <transformers>
-                <transformer>
-                  <manifestEntries>
-                    <X-Compile-Source-JDK>${maven.compiler.source}</X-Compile-Source-JDK>
-                    <X-Compile-Target-JDK>${maven.compiler.target}</X-Compile-Target-JDK>
-                  </manifestEntries>
-                </transformer>
-                <transformer />
-              </transformers>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
   <repositories>
     <repository>
       <id>maven.aksw.internal</id>
@@ -214,4 +115,3 @@
     <junit.version>4.11</junit.version>
   </properties>
 </project>
-
