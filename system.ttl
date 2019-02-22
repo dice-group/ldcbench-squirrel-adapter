@@ -7,7 +7,7 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 
 <http://project-hobbit.eu/sdk-example-benchmark/system>	a	hobbit:SystemInstance;
-    rdfs:label	"SDK Example System"@en;
-	rdfs:comment "Example system for SDK Example Benchmark"@en;
-	hobbit:implementsAPI <http://project-hobbit.eu/sdk-example-benchmark/API>;
+    rdfs:label	"Squirrel"@en;
+	rdfs:comment "Squirrel crawler"@en;
+	hobbit:implementsAPI <https://github.com/dice-group/ldcbench#Api>;
 	hobbit:imageName "git.project-hobbit.eu:4567/dice/squirrel/system-adapter" .

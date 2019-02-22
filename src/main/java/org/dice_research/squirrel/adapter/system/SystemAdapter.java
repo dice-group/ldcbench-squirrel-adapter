@@ -23,6 +23,7 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
     protected int numberOfWorkers = 1;
     protected Set<String> workerInstances = new HashSet<>();
     protected Semaphore frontierTerminated = new Semaphore(0);
+    protected boolean terminating = false;
 
     @Override
     public void init() throws Exception {
@@ -47,7 +48,7 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
         String[] WORKER_ENV = { "HOBBIT_RABBIT_HOST=rabbit", "OUTPUT_FOLDER=/var/squirrel/data",
                 "HTML_SCRAPER_YAML_PATH=/var/squirrel/yaml",
                 "CONTEXT_CONFIG_FILE=/var/squirrel/spring-config/context.xml", "SPARQL_HOST_NAME=" + sparqlEndpoint,
-                "SPARQL_HOST_PORT=8089", "DEDUPLICATION_ACTIVE=false", "MDB_HOST_NAME=" + mongoInstance,
+                "SPARQL_HOST_PORT=8890", "DEDUPLICATION_ACTIVE=false", "MDB_HOST_NAME=" + mongoInstance,
                 "MDB_PORT=27017" };
         String worker;
         for (int i = 0; i < numberOfWorkers; ++i) {
@@ -86,10 +87,27 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
                 LOGGER.error("Frontier terminated with exit code {}.", exitCode);
                 e = new IllegalStateException("Frontier terminated with exit code " + exitCode + ".");
             }
+            frontierInstance = null;
             terminate(e);
+        } else if ((mongoInstance != null) && (mongoInstance.equals(containerName)) && !terminating) {
+            // If we are not terminating, this behavior is not expected!
+            LOGGER.error("Mongo DB terminated unexpectedly with exit code {}.", exitCode);
+            terminate(new IllegalStateException("Mongo DB terminated unexpectedly with exit code " + exitCode + "."));
+        } else if ((containerName != null) && (workerInstances.contains(containerName)) && !terminating) {
+            // If we are not terminating, this behavior is not expected!
+            LOGGER.error("A worker terminated unexpectedly with exit code {}.", exitCode);
+            terminate(new IllegalStateException("A worker terminated unexpectedly with exit code " + exitCode + "."));
         } else {
-            // TODO check for the other containers
+            LOGGER.warn(
+                    "Got an unexpected message about a terminated container that is not known ({}). It will be ignored.",
+                    containerName);
         }
+    }
+
+    @Override
+    protected synchronized void terminate(Exception cause) {
+        terminating = true;
+        super.terminate(cause);
     }
 
     @Override
@@ -105,7 +123,6 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
         if (mongoInstance != null) {
             stopContainer(mongoInstance);
         }
-
         // Always close the super class after yours!
         super.close();
     }
