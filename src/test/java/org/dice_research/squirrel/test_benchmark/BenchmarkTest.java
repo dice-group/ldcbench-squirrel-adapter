@@ -1,38 +1,41 @@
 package org.dice_research.squirrel.test_benchmark;
 
 
+import static org.apache.jena.rdf.model.ModelFactory.createDefaultModel;
+import static org.dice_research.squirrel.benchmark.Constants.SYSTEM_URI;
+import static org.hobbit.core.Constants.BENCHMARK_PARAMETERS_MODEL_KEY;
+import static org.hobbit.core.Constants.HOBBIT_EXPERIMENT_URI_KEY;
+import static org.hobbit.core.Constants.HOBBIT_SESSION_ID_KEY;
+import static org.hobbit.core.Constants.NEW_EXPERIMENT_URI;
+import static org.hobbit.core.Constants.RABBIT_MQ_HOST_NAME_KEY;
+import static org.hobbit.core.Constants.SYSTEM_PARAMETERS_MODEL_KEY;
+import static org.hobbit.sdk.Constants.BENCHMARK_URI;
+import static org.hobbit.sdk.Constants.GIT_USERNAME;
+
+import java.io.IOException;
+import java.util.Date;
+
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDF;
-import org.dice_research.squirrel.adapter.*;
-import org.dice_research.squirrel.adapter.system.SystemAdapter;
-import org.hobbit.core.components.Component;
 import org.hobbit.core.rabbit.RabbitMQUtils;
 import org.hobbit.sdk.docker.AbstractDockerizer;
 import org.hobbit.sdk.docker.RabbitMqDockerizer;
-import org.hobbit.sdk.docker.builders.*;
-import org.hobbit.sdk.docker.builders.hobbit.*;
+import org.hobbit.sdk.docker.builders.hobbit.BenchmarkDockerBuilder;
+import org.hobbit.sdk.docker.builders.hobbit.DataGenDockerBuilder;
+import org.hobbit.sdk.docker.builders.hobbit.EvalModuleDockerBuilder;
+import org.hobbit.sdk.docker.builders.hobbit.EvalStorageDockerBuilder;
+import org.hobbit.sdk.docker.builders.hobbit.SystemAdapterDockerBuilder;
+import org.hobbit.sdk.docker.builders.hobbit.TaskGenDockerBuilder;
 import org.hobbit.sdk.utils.CommandQueueListener;
 import org.hobbit.sdk.utils.ComponentsExecutor;
 import org.hobbit.sdk.utils.ModelsHandler;
 import org.hobbit.sdk.utils.MultiThreadedImageBuilder;
-import org.hobbit.sdk.utils.commandreactions.CommandReactionsBuilder;
 import org.hobbit.vocab.HOBBIT;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.EnvironmentVariables;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
-
-import static org.apache.jena.rdf.model.ModelFactory.createDefaultModel;
-import static org.dice_research.squirrel.benchmark.Constants.*;
-import static org.hobbit.core.Constants.*;
-
-import static org.hobbit.sdk.Constants.BENCHMARK_URI;
-import static org.hobbit.sdk.Constants.GIT_USERNAME;
 
 @Ignore
 public class BenchmarkTest {
@@ -103,16 +106,16 @@ public class BenchmarkTest {
     @Test
     @Ignore
     public void flushQueue(){
-        QueueClient queueClient = new QueueClient(GIT_USERNAME);
-        queueClient.flushQueue();
+//        QueueClient queueClient = new QueueClient(GIT_USERNAME);
+//        queueClient.flushQueue();
     }
 
     //Submit benchmark to a queue of a locally running platform
     @Test
     @Ignore
     public void submitToQueue() throws Exception {
-        QueueClient queueClient = new QueueClient(GIT_USERNAME);
-        queueClient.submitToQueue(BENCHMARK_URI, SYSTEM_URI, createBenchmarkParameters());
+//        QueueClient queueClient = new QueueClient(GIT_USERNAME);
+//        queueClient.submitToQueue(BENCHMARK_URI, SYSTEM_URI, createBenchmarkParameters());
 
     }
 
