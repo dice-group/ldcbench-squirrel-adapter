@@ -10,4 +10,4 @@
     rdfs:label	"Squirrel"@en;
 	rdfs:comment "Squirrel crawler"@en;
 	hobbit:implementsAPI <https://github.com/dice-group/ldcbench#Api>;
-	hobbit:imageName "git.project-hobbit.eu/gsjunior86/squirrel_adapter" .
+	hobbit:imageName "git.project-hobbit.eu:4567/gsjunior86/squirrel_adapter" .
