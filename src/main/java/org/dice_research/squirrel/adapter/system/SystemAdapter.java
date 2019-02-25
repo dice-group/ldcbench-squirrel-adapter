@@ -5,8 +5,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Semaphore;
 
+import org.dice_research.squirrel.benchmark.Constants;
 import org.hobbit.core.components.AbstractSystemAdapter;
 import org.hobbit.core.components.ContainerStateObserver;
+import org.hobbit.core.rabbit.DataSender;
+import org.hobbit.core.rabbit.DataSenderImpl;
 import org.hobbit.core.rabbit.RabbitMQUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +27,9 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
     protected Set<String> workerInstances = new HashSet<>();
     protected Semaphore frontierTerminated = new Semaphore(0);
     protected boolean terminating = false;
+    private DataSender senderFrontier;
+
+
 
     @Override
     public void init() throws Exception {
@@ -37,6 +43,8 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
                 "MDB_HOST_NAME=" + mongoInstance, "MDB_PORT=27017" };
         frontierInstance = createContainer(FRONTIER_IMAGE, FRONTIER_ENV, this);
         LOGGER.debug("Squirrel frontier started");
+        senderFrontier = DataSenderImpl.builder().queue(outgoingDataQueuefactory, Constants.FRONTIER_QUEUE_NAME)
+                .build();
         LOGGER.info("Squirrel crawler initialized and waiting for additional data...");
     }
 
@@ -74,6 +82,12 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
 
         // TODO Send message to frontier
         String seed = RabbitMQUtils.readString(data);
+        
+        try {
+			senderFrontier.sendData(seed.getBytes());
+		} catch (IOException e) {
+			LOGGER.warn(e.getMessage());
+		}
 
         LOGGER.debug("Seed URI(s) forwarded.");
     }
@@ -114,6 +128,7 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
     public void close() throws IOException {
         // Free the resources you requested here
         LOGGER.debug("close()");
+        senderFrontier.close();
         for (String worker : workerInstances) {
             stopContainer(worker);
         }
