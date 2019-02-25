@@ -12,6 +12,8 @@ public class Constants {
     //public static String GIT_REPO_PATH = "";
 
     public static String PROJECT_NAME = "squirrel-benchmark";
+    
+    
 
     //use these constants within BenchmarkController
     public static final String BENCHMARK_IMAGE_NAME = GIT_REPO_PATH+PROJECT_NAME +"/benchmark-controller";
@@ -26,5 +28,7 @@ public class Constants {
 
     public static final String SDK_BUILD_DIR_PATH = ".";  //build directory, temp docker file will be created there
     public static final String SDK_WORK_DIR_PATH = "/usr/src/"+PROJECT_NAME;
+    
+    public static final String FRONTIER_QUEUE_NAME = "squirrel.frontier";
 
 }
