@@ -92,6 +92,7 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
         } else if ((mongoInstance != null) && (mongoInstance.equals(containerName)) && !terminating) {
             // If we are not terminating, this behavior is not expected!
             LOGGER.error("Mongo DB terminated unexpectedly with exit code {}.", exitCode);
+            mongoInstance = null;
             terminate(new IllegalStateException("Mongo DB terminated unexpectedly with exit code " + exitCode + "."));
         } else if ((containerName != null) && (workerInstances.contains(containerName)) && !terminating) {
             // If we are not terminating, this behavior is not expected!
@@ -126,5 +127,4 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
         // Always close the super class after yours!
         super.close();
     }
-
 }
