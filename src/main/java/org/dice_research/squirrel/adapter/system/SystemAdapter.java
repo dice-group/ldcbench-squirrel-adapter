@@ -129,7 +129,9 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
     public void close() throws IOException {
         // Free the resources you requested here
         LOGGER.debug("close()");
-        senderFrontier.close();
+        if (senderFrontier != null) {
+            senderFrontier.close();
+        }
         for (String worker : workerInstances) {
             stopContainer(worker);
         }
