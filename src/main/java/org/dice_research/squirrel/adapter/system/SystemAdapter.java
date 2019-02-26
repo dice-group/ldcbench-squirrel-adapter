@@ -1,11 +1,17 @@
 package org.dice_research.squirrel.adapter.system;
 
 import java.io.IOException;
+import java.net.URI;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Semaphore;
 
 import org.dice_research.squirrel.benchmark.Constants;
+import org.dice_research.squirrel.data.uri.CrawleableUri;
+import org.dice_research.squirrel.data.uri.serialize.Serializer;
+import org.dice_research.squirrel.data.uri.serialize.java.GzipJavaUriSerializer;
+import org.dice_research.squirrel.rabbit.msgs.CrawlingResult;
 import org.hobbit.core.components.AbstractSystemAdapter;
 import org.hobbit.core.components.ContainerStateObserver;
 import org.hobbit.core.rabbit.DataSender;
@@ -28,6 +34,7 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
     protected Semaphore frontierTerminated = new Semaphore(0);
     protected boolean terminating = false;
     private DataSender senderFrontier;
+    private Serializer serializer;
 
 
 
@@ -46,6 +53,7 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
         senderFrontier = DataSenderImpl.builder().queue(outgoingDataQueuefactory, Constants.FRONTIER_QUEUE_NAME)
                 .build();
         LOGGER.info("Squirrel crawler initialized and waiting for additional data...");
+        serializer = new GzipJavaUriSerializer();
     }
 
     @Override
@@ -82,10 +90,11 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
 
         // TODO Send message to frontier
         String seed = RabbitMQUtils.readString(data);
+      
         
         try {
-			senderFrontier.sendData(seed.getBytes());
-		} catch (IOException e) {
+			senderFrontier.sendData(serializer.serialize(Arrays.asList(new CrawleableUri(new URI(seed)))));
+		} catch (Exception e) {
 			LOGGER.warn(e.getMessage());
 		}
 
