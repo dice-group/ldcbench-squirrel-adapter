@@ -43,10 +43,6 @@
                     <groupId>com.google.guava</groupId>
                     <artifactId>guava</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>org.apache.jena</groupId>
-                    <artifactId>jena-shaded-guava</artifactId>
-                </exclusion>
             </exclusions>
         </dependency>
 
