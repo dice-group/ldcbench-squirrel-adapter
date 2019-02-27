@@ -1,3 +1,9 @@
+build:
+	mvn clean package -DskipTests
+
+dockerize: build
+	docker build -t git.project-hobbit.eu:4567/gsjunior86/squirrel_adapter .
+
 install-deps:
 	mvn validate
 
