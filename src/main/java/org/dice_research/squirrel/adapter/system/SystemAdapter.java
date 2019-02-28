@@ -27,6 +27,10 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
     private final static String MONGODB_IMAGE = "mongo:4.0.0";
     private final static String WORKER_IMAGE = "squirrel.worker:latest";
 
+    protected final String MDB_CONNECTION_TIME_OUT = "5000";
+    protected final String MDB_SOCKET_TIME_OUT = "10000";
+    protected final String MDB_SERVER_TIME_OUT = "10000";
+
     protected String mongoInstance;
     protected String frontierInstance;
     protected int numberOfWorkers = 1;
@@ -65,7 +69,7 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
                 "HTML_SCRAPER_YAML_PATH=/var/squirrel/yaml",
                 "CONTEXT_CONFIG_FILE=/var/squirrel/spring-config/context.xml", "SPARQL_HOST_NAME=" + sparqlEndpoint,
                 "SPARQL_HOST_PORT=8890", "DEDUPLICATION_ACTIVE=false", "MDB_HOST_NAME=" + mongoInstance,
-                "MDB_PORT=27017" };
+                "MDB_PORT=27017,MDB_CONNECTION_TIME_OUT="+ MDB_CONNECTION_TIME_OUT +",MDB_SOCKET_TIME_OUT="+MDB_SOCKET_TIME_OUT+",MDB_SERVER_TIME_OUT="+MDB_SERVER_TIME_OUT };
         String worker;
         for (int i = 0; i < numberOfWorkers; ++i) {
             worker = createContainer(WORKER_IMAGE, WORKER_ENV, this);
