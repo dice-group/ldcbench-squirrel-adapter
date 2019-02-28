@@ -11,7 +11,7 @@ import org.dice_research.squirrel.benchmark.Constants;
 import org.dice_research.squirrel.data.uri.CrawleableUri;
 import org.dice_research.squirrel.data.uri.serialize.Serializer;
 import org.dice_research.squirrel.data.uri.serialize.java.GzipJavaUriSerializer;
-import org.dice_research.squirrel.rabbit.msgs.CrawlingResult;
+import org.dice_research.squirrel.rabbit.msgs.UriSet;
 import org.hobbit.core.components.AbstractSystemAdapter;
 import org.hobbit.core.components.ContainerStateObserver;
 import org.hobbit.core.rabbit.DataSender;
@@ -39,8 +39,6 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
     protected boolean terminating = false;
     private DataSender senderFrontier;
     private Serializer serializer;
-
-
 
     @Override
     public void init() throws Exception {
@@ -94,13 +92,12 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
 
         // TODO Send message to frontier
         String seed = RabbitMQUtils.readString(data);
-      
-        
+
         try {
-			senderFrontier.sendData(serializer.serialize(Arrays.asList(new CrawleableUri(new URI(seed)))));
-		} catch (Exception e) {
-			LOGGER.warn(e.getMessage());
-		}
+            senderFrontier.sendData(serializer.serialize(new UriSet(Arrays.asList(new CrawleableUri(new URI(seed))))));
+        } catch (Exception e) {
+            LOGGER.warn(e.getMessage());
+        }
 
         LOGGER.debug("Seed URI(s) forwarded.");
     }
