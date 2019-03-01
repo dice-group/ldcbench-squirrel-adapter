@@ -49,7 +49,9 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
 
         LOGGER.debug("Initializing Squirrel Frontier...");
         String[] FRONTIER_ENV = { "HOBBIT_RABBIT_HOST=rabbit", "SEED_FILE=/var/squirrel/seeds.txt",
-                "MDB_HOST_NAME=" + mongoInstance, "MDB_PORT=27017" };
+                "MDB_HOST_NAME=" + mongoInstance, "MDB_PORT=27017",
+                "MDB_CONNECTION_TIME_OUT=" + MDB_CONNECTION_TIME_OUT, "MDB_SOCKET_TIME_OUT=" + MDB_SOCKET_TIME_OUT,
+                "MDB_SERVER_TIME_OUT=" + MDB_SERVER_TIME_OUT };
         frontierInstance = createContainer(FRONTIER_IMAGE, FRONTIER_ENV, this);
         LOGGER.debug("Squirrel frontier started");
         senderFrontier = DataSenderImpl.builder().queue(outgoingDataQueuefactory, Constants.FRONTIER_QUEUE_NAME)
@@ -66,8 +68,7 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
         String[] WORKER_ENV = { "HOBBIT_RABBIT_HOST=rabbit", "OUTPUT_FOLDER=/var/squirrel/data",
                 "HTML_SCRAPER_YAML_PATH=/var/squirrel/yaml",
                 "CONTEXT_CONFIG_FILE=/var/squirrel/spring-config/context.xml", "SPARQL_HOST_NAME=" + sparqlEndpoint,
-                "SPARQL_HOST_PORT=8890", "DEDUPLICATION_ACTIVE=false", "MDB_HOST_NAME=" + mongoInstance,
-                "MDB_PORT=27017,MDB_CONNECTION_TIME_OUT="+ MDB_CONNECTION_TIME_OUT +",MDB_SOCKET_TIME_OUT="+MDB_SOCKET_TIME_OUT+",MDB_SERVER_TIME_OUT="+MDB_SERVER_TIME_OUT };
+                "SPARQL_HOST_PORT=8890", "DEDUPLICATION_ACTIVE=false" };
         String worker;
         for (int i = 0; i < numberOfWorkers; ++i) {
             worker = createContainer(WORKER_IMAGE, WORKER_ENV, this);
