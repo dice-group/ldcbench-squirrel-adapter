@@ -2,6 +2,7 @@ package org.dice_research.squirrel.adapter.system;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -63,12 +64,16 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
     @Override
     public void receiveGeneratedData(byte[] data) {
         // handle the incoming data as described in the benchmark description
-        String sparqlEndpoint = RabbitMQUtils.readString(data);
-        LOGGER.debug("received SPARQL endpoint \"{}\".", sparqlEndpoint);
+        ByteBuffer buffer = ByteBuffer.wrap(data);
+        String sparqlUrl = RabbitMQUtils.readString(buffer);
+        String sparqlUser = RabbitMQUtils.readString(buffer);
+        String sparqlPwd = RabbitMQUtils.readString(buffer);
+        LOGGER.debug("received SPARQL endpoint \"{}\".", sparqlUrl);
         String[] WORKER_ENV = { "HOBBIT_RABBIT_HOST=rabbit", "OUTPUT_FOLDER=/var/squirrel/data",
                 "HTML_SCRAPER_YAML_PATH=/var/squirrel/yaml",
-                "CONTEXT_CONFIG_FILE=/var/squirrel/spring-config/context.xml", "SPARQL_HOST_NAME=" + sparqlEndpoint,
-                "SPARQL_HOST_PORT=8890", "DEDUPLICATION_ACTIVE=false" };
+                "CONTEXT_CONFIG_FILE=/var/squirrel/spring-config/context.xml", "SPARQL_URL=" + sparqlUrl,
+                "SPARQL_HOST_USER=" + sparqlUser, "SPARQL_HOST_PASSWD=" + sparqlPwd, "SPARQL_HOST_PORT=8890",
+                "DEDUPLICATION_ACTIVE=false" };
         String worker;
         for (int i = 0; i < numberOfWorkers; ++i) {
             worker = createContainer(WORKER_IMAGE, WORKER_ENV, this);
@@ -105,7 +110,7 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
 
     public void containerStopped(String containerName, int exitCode) {
         // Check whether it is one of your containers and react accordingly
-        if ((frontierInstance != null) && (frontierInstance.equals(containerName))) {
+        if ((frontierInstance != null) && (frontierInstance.equals(containerName)) && !terminating) {
             Exception e = null;
             if (exitCode != 0) {
                 // The frontier had an error. Its time to panic
@@ -122,6 +127,7 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
         } else if ((containerName != null) && (workerInstances.contains(containerName)) && !terminating) {
             // If we are not terminating, this behavior is not expected!
             LOGGER.error("A worker terminated unexpectedly with exit code {}.", exitCode);
+            workerInstances.remove(containerName);
             terminate(new IllegalStateException("A worker terminated unexpectedly with exit code " + exitCode + "."));
         } else {
             LOGGER.warn(
@@ -132,6 +138,7 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
 
     @Override
     protected synchronized void terminate(Exception cause) {
+        LOGGER.debug("Terminating");
         terminating = true;
         super.terminate(cause);
     }
@@ -139,18 +146,25 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
     @Override
     public void close() throws IOException {
         // Free the resources you requested here
-        LOGGER.debug("close()");
         if (senderFrontier != null) {
             senderFrontier.close();
         }
+        LOGGER.debug("Stopping workers...");
         for (String worker : workerInstances) {
+            LOGGER.debug("Stopping {}", worker);
             stopContainer(worker);
         }
         if (frontierInstance != null) {
+            LOGGER.debug("Stopping frontier {}", frontierInstance);
             stopContainer(frontierInstance);
+        } else {
+            LOGGER.debug("There is no frontier to stop.");
         }
         if (mongoInstance != null) {
+            LOGGER.debug("Stopping MongoDB {}", mongoInstance);
             stopContainer(mongoInstance);
+        } else {
+            LOGGER.debug("There is no MongoDB to stop.");
         }
         // Always close the super class after yours!
         super.close();
