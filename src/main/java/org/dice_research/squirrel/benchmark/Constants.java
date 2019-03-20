@@ -28,7 +28,5 @@ public class Constants {
 
     public static final String SDK_BUILD_DIR_PATH = ".";  //build directory, temp docker file will be created there
     public static final String SDK_WORK_DIR_PATH = "/usr/src/"+PROJECT_NAME;
-    
-    public static final String FRONTIER_QUEUE_NAME = "squirrel.frontier";
 
 }
