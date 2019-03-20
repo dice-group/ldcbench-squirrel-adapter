@@ -24,9 +24,9 @@ import org.slf4j.LoggerFactory;
 public class SystemAdapter extends AbstractSystemAdapter implements ContainerStateObserver {
     private static final Logger LOGGER = LoggerFactory.getLogger(SystemAdapter.class);
 
-    private final static String FRONTIER_IMAGE = "squirrel.frontier:latest";
+    private final static String FRONTIER_IMAGE = "dicegroup/squirrel-frontier:latest";
     private final static String MONGODB_IMAGE = "mongo:4.0.0";
-    private final static String WORKER_IMAGE = "squirrel.worker:latest";
+    private final static String WORKER_IMAGE = "dicegroup/squirrel-worker:latest";
 
     protected final String MDB_CONNECTION_TIME_OUT = "5000";
     protected final String MDB_SOCKET_TIME_OUT = "10000";
