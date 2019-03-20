@@ -71,7 +71,7 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
         LOGGER.debug("received SPARQL endpoint \"{}\".", sparqlUrl);
         String[] WORKER_ENV = { "HOBBIT_RABBIT_HOST=rabbit", "OUTPUT_FOLDER=/var/squirrel/data",
                 "HTML_SCRAPER_YAML_PATH=/var/squirrel/yaml",
-                "CONTEXT_CONFIG_FILE=/var/squirrel/spring-config/context.xml", "SPARQL_URL=" + sparqlUrl,
+                "CONTEXT_CONFIG_FILE=/var/squirrel/spring-config/context-sparql.xml", "SPARQL_URL=" + sparqlUrl,
                 "SPARQL_HOST_USER=" + sparqlUser, "SPARQL_HOST_PASSWD=" + sparqlPwd, "SPARQL_HOST_PORT=8890",
                 "DEDUPLICATION_ACTIVE=false" };
         String worker;
