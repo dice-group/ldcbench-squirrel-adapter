@@ -18,6 +18,7 @@ import org.hobbit.core.components.ContainerStateObserver;
 import org.hobbit.core.rabbit.DataSender;
 import org.hobbit.core.rabbit.DataSenderImpl;
 import org.hobbit.core.rabbit.RabbitMQUtils;
+import static org.hobbit.core.Constants.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +46,7 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
     public void init() throws Exception {
         super.init();
         LOGGER.debug("Initializing MongoDB server...");
-        mongoInstance = createContainer(MONGODB_IMAGE, null, this);
+        mongoInstance = createContainer(MONGODB_IMAGE, CONTAINER_TYPE_SYSTEM, null);
         LOGGER.debug("MongoDB server started");
 
         LOGGER.debug("Initializing Squirrel Frontier...");
