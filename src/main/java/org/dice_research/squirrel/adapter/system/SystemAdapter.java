@@ -93,12 +93,12 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
         // handle the incoming task and create a result
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("receiveGeneratedTask({})->{}", taskId, new String(data));
-        } else {
-            LOGGER.debug("Received seed URI(s).");
         }
 
         // TODO Send message to frontier
         String seed = RabbitMQUtils.readString(data);
+
+        LOGGER.debug("Received seed URI(s): {}.", seed);
 
         try {
             senderFrontier.sendData(serializer.serialize(new UriSet(Arrays.asList(new CrawleableUri(new URI(seed))))));
