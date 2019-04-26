@@ -12,7 +12,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <slf4j.version>1.7.15</slf4j.version>
         <junit.version>4.11</junit.version>
-        <hobbit.sdk.version>1.1.17</hobbit.sdk.version>
+        <hobbit.sdk.version>1.1.18-ldcbench-SNAPSHOT</hobbit.sdk.version>
     </properties>
 
     <repositories>
