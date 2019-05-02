@@ -51,6 +51,7 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
 
         LOGGER.debug("Initializing Squirrel Frontier...");
         String[] FRONTIER_ENV = { "HOBBIT_RABBIT_HOST=rabbit", "SEED_FILE=/var/squirrel/seeds.txt",
+        		"FRONTIER_CONTEXT_CONFIG_FILE=/var/squirrel/spring-config/frontier-context.xml",
                 "MDB_HOST_NAME=" + mongoInstance, "MDB_PORT=27017",
                 "MDB_CONNECTION_TIME_OUT=" + MDB_CONNECTION_TIME_OUT, "MDB_SOCKET_TIME_OUT=" + MDB_SOCKET_TIME_OUT,
                 "MDB_SERVER_TIME_OUT=" + MDB_SERVER_TIME_OUT };
@@ -72,7 +73,7 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
         LOGGER.debug("received SPARQL endpoint \"{}\".", sparqlUrl);
         String[] WORKER_ENV = { "HOBBIT_RABBIT_HOST=rabbit", "OUTPUT_FOLDER=/var/squirrel/data",
                 "HTML_SCRAPER_YAML_PATH=/var/squirrel/yaml",
-                "CONTEXT_CONFIG_FILE=/var/squirrel/spring-config/context-sparql.xml", "SPARQL_URL=" + sparqlUrl,
+                "CONTEXT_CONFIG_FILE=/var/squirrel/spring-config/worker-context-sparql.xml", "SPARQL_URL=" + sparqlUrl,
                 "SPARQL_HOST_USER=" + sparqlUser, "SPARQL_HOST_PASSWD=" + sparqlPwd, "SPARQL_HOST_PORT=8890",
                 "DEDUPLICATION_ACTIVE=false" };
         String worker;
