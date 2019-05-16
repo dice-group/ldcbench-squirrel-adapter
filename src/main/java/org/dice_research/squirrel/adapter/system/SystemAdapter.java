@@ -74,7 +74,7 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
         String[] WORKER_ENV = { "HOBBIT_RABBIT_HOST=rabbit", "OUTPUT_FOLDER=/var/squirrel/data",
                 "HTML_SCRAPER_YAML_PATH=/var/squirrel/yaml",
                 "CONTEXT_CONFIG_FILE=/var/squirrel/spring-config/worker-context-sparql.xml",
-                "SPARQL_URL=http://" + sparqlUrl + ":8890/sparql-auth",
+                "SPARQL_URL=" + sparqlUrl,
                 "SPARQL_HOST_USER=" + sparqlUser, "SPARQL_HOST_PASSWD=" + sparqlPwd,
                 "DEDUPLICATION_ACTIVE=false" };
         String worker;
