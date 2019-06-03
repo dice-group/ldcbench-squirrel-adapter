@@ -3,6 +3,7 @@ package org.dice_research.squirrel.adapter.system;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -98,12 +99,16 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
         }
 
         // TODO Send message to frontier
-        String seed = RabbitMQUtils.readString(data);
+        String[] seedURIs = RabbitMQUtils.readString(data).split("\n");
 
-        LOGGER.debug("Received seed URI(s): {}.", seed);
+        LOGGER.debug("Received seed URIs: {}.", Arrays.toString(seedURIs));
 
         try {
-            senderFrontier.sendData(serializer.serialize(new UriSet(Arrays.asList(new CrawleableUri(new URI(seed))))));
+            ArrayList<CrawleableUri> crawleables = new ArrayList<>();
+            for (String s : seedURIs) {
+                crawleables.add(new CrawleableUri(new URI(s)));
+            }
+            senderFrontier.sendData(serializer.serialize(new UriSet(crawleables)));
         } catch (Exception e) {
             LOGGER.warn(e.getMessage());
         }
