@@ -14,6 +14,7 @@ import org.dice_research.squirrel.data.uri.CrawleableUri;
 import org.dice_research.squirrel.data.uri.serialize.Serializer;
 import org.dice_research.squirrel.data.uri.serialize.java.GzipJavaUriSerializer;
 import org.dice_research.squirrel.rabbit.msgs.UriSet;
+import org.hobbit.core.Commands;
 import org.hobbit.core.components.AbstractSystemAdapter;
 import org.hobbit.core.components.ContainerStateObserver;
 import org.hobbit.core.rabbit.DataSender;
@@ -111,6 +112,17 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
     @Override
     public void receiveGeneratedTask(String taskId, byte[] data) {
         throw new IllegalStateException("Should not receive any tasks.");
+    }
+
+    @Override
+    public void receiveCommand(byte command, byte[] data) {
+        if (command == Commands.DOCKER_CONTAINER_TERMINATED) {
+            ByteBuffer buffer = ByteBuffer.wrap(data);
+            String containerName = RabbitMQUtils.readString(buffer);
+            int exitCode = buffer.get();
+            containerStopped(containerName, exitCode);
+        }
+        super.receiveCommand(command, data);
     }
 
     public void containerStopped(String containerName, int exitCode) {
