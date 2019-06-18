@@ -71,7 +71,11 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
         String sparqlUrl = RabbitMQUtils.readString(buffer);
         String sparqlUser = RabbitMQUtils.readString(buffer);
         String sparqlPwd = RabbitMQUtils.readString(buffer);
-        LOGGER.debug("received SPARQL endpoint \"{}\".", sparqlUrl);
+        String[] seedURIs = RabbitMQUtils.readString(buffer).split("\n");
+
+        LOGGER.info("Sparql Endpoint: " + sparqlUrl);
+        LOGGER.info("Seed URIs: {}.", Arrays.toString(seedURIs));
+
         String[] WORKER_ENV = { "HOBBIT_RABBIT_HOST=rabbit", "OUTPUT_FOLDER=/var/squirrel/data",
                 "HTML_SCRAPER_YAML_PATH=/var/squirrel/yaml",
                 "CONTEXT_CONFIG_FILE=/var/squirrel/spring-config/worker-context-sparql.xml",
@@ -89,20 +93,8 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
                 workerInstances.add(worker);
             }
         }
-    }
-
-    @Override
-    public void receiveGeneratedTask(String taskId, byte[] data) {
-        // handle the incoming task and create a result
-        if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace("receiveGeneratedTask({})->{}", taskId, new String(data));
-        }
 
         // TODO Send message to frontier
-        String[] seedURIs = RabbitMQUtils.readString(data).split("\n");
-
-        LOGGER.debug("Received seed URIs: {}.", Arrays.toString(seedURIs));
-
         try {
             ArrayList<CrawleableUri> crawleables = new ArrayList<>();
             for (String s : seedURIs) {
@@ -114,6 +106,11 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
         }
 
         LOGGER.debug("Seed URI(s) forwarded.");
+    }
+
+    @Override
+    public void receiveGeneratedTask(String taskId, byte[] data) {
+        throw new IllegalStateException("Should not receive any tasks.");
     }
 
     public void containerStopped(String containerName, int exitCode) {
