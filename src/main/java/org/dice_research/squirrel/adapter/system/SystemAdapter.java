@@ -5,6 +5,7 @@ import static org.hobbit.core.Constants.CONTAINER_TYPE_SYSTEM;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,6 +22,7 @@ import org.dice_research.squirrel.data.uri.CrawleableUri;
 import org.dice_research.squirrel.data.uri.serialize.Serializer;
 import org.dice_research.squirrel.data.uri.serialize.java.GzipJavaUriSerializer;
 import org.dice_research.squirrel.rabbit.msgs.UriSet;
+import org.hobbit.core.Commands;
 import org.hobbit.core.components.AbstractSystemAdapter;
 import org.hobbit.core.components.ContainerStateObserver;
 import org.hobbit.core.rabbit.DataSender;
@@ -98,7 +100,11 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
         String sparqlUrl = RabbitMQUtils.readString(buffer);
         String sparqlUser = RabbitMQUtils.readString(buffer);
         String sparqlPwd = RabbitMQUtils.readString(buffer);
-        LOGGER.debug("received SPARQL endpoint \"{}\".", sparqlUrl);
+        String[] seedURIs = RabbitMQUtils.readString(buffer).split("\n");
+
+        LOGGER.info("Sparql Endpoint: " + sparqlUrl);
+        LOGGER.info("Seed URIs: {}.", Arrays.toString(seedURIs));
+
         String[] WORKER_ENV = { "HOBBIT_RABBIT_HOST=rabbit", "OUTPUT_FOLDER=/var/squirrel/data",
                 "HTML_SCRAPER_YAML_PATH=/var/squirrel/yaml",
                 "CONTEXT_CONFIG_FILE=/var/squirrel/spring-config/worker-context-sparql.xml",
@@ -116,27 +122,35 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
                 workerInstances.add(worker);
             }
         }
-    }
-
-    @Override
-    public void receiveGeneratedTask(String taskId, byte[] data) {
-        // handle the incoming task and create a result
-        if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace("receiveGeneratedTask({})->{}", taskId, new String(data));
-        }
 
         // TODO Send message to frontier
-        String seed = RabbitMQUtils.readString(data);
-
-        LOGGER.debug("Received seed URI(s): {}.", seed);
-
         try {
-            senderFrontier.sendData(serializer.serialize(new UriSet(Arrays.asList(new CrawleableUri(new URI(seed))))));
+            ArrayList<CrawleableUri> crawleables = new ArrayList<>();
+            for (String s : seedURIs) {
+                crawleables.add(new CrawleableUri(new URI(s)));
+            }
+            senderFrontier.sendData(serializer.serialize(new UriSet(crawleables)));
         } catch (Exception e) {
             LOGGER.warn(e.getMessage());
         }
 
         LOGGER.debug("Seed URI(s) forwarded.");
+    }
+
+    @Override
+    public void receiveGeneratedTask(String taskId, byte[] data) {
+        throw new IllegalStateException("Should not receive any tasks.");
+    }
+
+    @Override
+    public void receiveCommand(byte command, byte[] data) {
+        if (command == Commands.DOCKER_CONTAINER_TERMINATED) {
+            ByteBuffer buffer = ByteBuffer.wrap(data);
+            String containerName = RabbitMQUtils.readString(buffer);
+            int exitCode = buffer.get();
+            containerStopped(containerName, exitCode);
+        }
+        super.receiveCommand(command, data);
     }
 
     public void containerStopped(String containerName, int exitCode) {
