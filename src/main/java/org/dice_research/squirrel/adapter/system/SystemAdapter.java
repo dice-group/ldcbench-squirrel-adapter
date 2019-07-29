@@ -1,13 +1,21 @@
 package org.dice_research.squirrel.adapter.system;
 
+import static org.hobbit.core.Constants.CONTAINER_TYPE_SYSTEM;
+
 import java.io.IOException;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Semaphore;
 
+import org.apache.jena.rdf.model.NodeIterator;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.ResIterator;
+import org.apache.jena.vocabulary.RDF;
 import org.dice_research.squirrel.Constants;
 import org.dice_research.squirrel.data.uri.CrawleableUri;
 import org.dice_research.squirrel.data.uri.serialize.Serializer;
@@ -18,7 +26,7 @@ import org.hobbit.core.components.ContainerStateObserver;
 import org.hobbit.core.rabbit.DataSender;
 import org.hobbit.core.rabbit.DataSenderImpl;
 import org.hobbit.core.rabbit.RabbitMQUtils;
-import static org.hobbit.core.Constants.*;
+import org.hobbit.vocab.HOBBIT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +63,26 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
                 "MDB_HOST_NAME=" + mongoInstance, "MDB_PORT=27017",
                 "MDB_CONNECTION_TIME_OUT=" + MDB_CONNECTION_TIME_OUT, "MDB_SOCKET_TIME_OUT=" + MDB_SOCKET_TIME_OUT,
                 "MDB_SERVER_TIME_OUT=" + MDB_SERVER_TIME_OUT };
+        
+        Property parameter;
+        NodeIterator objIterator;
+        Map<String, String> parameters = new HashMap<>();
+ 
+        ResIterator iterator = systemParamModel.listResourcesWithProperty(RDF.type, HOBBIT.Parameter);
+        Property defaultValProperty = systemParamModel.getProperty("http://w3id.org/hobbit/vocab#defaultValue");
+
+        while (iterator.hasNext()) {
+            parameter = systemParamModel.getProperty(iterator.next().getURI());
+            objIterator = systemParamModel.listObjectsOfProperty(parameter, defaultValProperty);
+            while (objIterator.hasNext()) {
+                String value = objIterator.next().asLiteral().getString();
+                parameters.put(parameter.getLocalName(), value);
+            }
+        }
+        
+        LOGGER.info("PARAMETERS: " + parameters.toString());
+
+        
         frontierInstance = createContainer(FRONTIER_IMAGE, FRONTIER_ENV, this);
         LOGGER.debug("Squirrel frontier started");
         senderFrontier = DataSenderImpl.builder().queue(outgoingDataQueuefactory, Constants.FRONTIER_QUEUE_NAME)

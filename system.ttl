@@ -10,4 +10,12 @@
     rdfs:label	"Squirrel"@en;
 	rdfs:comment "Squirrel crawler"@en;
 	hobbit:implementsAPI <https://github.com/dice-group/ldcbench#Api>;
-	hobbit:imageName "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter" .
+	hobbit:imageName "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter" ;
+	hobbit:hasParameter <http://project-hobbit.eu/ldcbench-system/numberOfWorkers> .
+
+
+<http://project-hobbit.eu/ldcbench-system/numberOfWorkers> a hobbit:Parameter, hobbit:ConfigurableParameter, hobbit:FeatureParameter;
+	rdfs:label "Number of workers"@en;
+    rdfs:range xsd:integer;
+    hobbit:defaultValue "1"^^xsd:integer .
+
