@@ -7,16 +7,11 @@ import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Semaphore;
 
-import org.apache.jena.rdf.model.NodeIterator;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.ResIterator;
-import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.Literal;
 import org.dice_research.squirrel.Constants;
 import org.dice_research.squirrel.data.uri.CrawleableUri;
 import org.dice_research.squirrel.data.uri.serialize.Serializer;
@@ -28,7 +23,7 @@ import org.hobbit.core.components.ContainerStateObserver;
 import org.hobbit.core.rabbit.DataSender;
 import org.hobbit.core.rabbit.DataSenderImpl;
 import org.hobbit.core.rabbit.RabbitMQUtils;
-import org.hobbit.vocab.HOBBIT;
+import org.hobbit.utils.rdf.RdfHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,13 +34,15 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
     private final static String MONGODB_IMAGE = "mongo:4.0.0";
     private final static String WORKER_IMAGE = "dicegroup/squirrel-worker:latest";
 
+    public final static String NUMBER_WORKERS_URI = "http://project-hobbit.eu/ldcbench-system/numberOfWorkers";
+
     protected final String MDB_CONNECTION_TIME_OUT = "5000";
     protected final String MDB_SOCKET_TIME_OUT = "10000";
     protected final String MDB_SERVER_TIME_OUT = "10000";
 
     protected String mongoInstance;
     protected String frontierInstance;
-    protected int numberOfWorkers = 1;
+    protected int numberOfWorkers;
     protected Set<String> workerInstances = new HashSet<>();
     protected Semaphore frontierTerminated = new Semaphore(0);
     protected boolean terminating = false;
@@ -61,30 +58,37 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
 
         LOGGER.debug("Initializing Squirrel Frontier...");
         String[] FRONTIER_ENV = { "HOBBIT_RABBIT_HOST=rabbit", "SEED_FILE=/var/squirrel/seeds.txt",
-        		"FRONTIER_CONTEXT_CONFIG_FILE=/var/squirrel/spring-config/frontier-context.xml",
+                "FRONTIER_CONTEXT_CONFIG_FILE=/var/squirrel/spring-config/frontier-context.xml",
                 "MDB_HOST_NAME=" + mongoInstance, "MDB_PORT=27017",
                 "MDB_CONNECTION_TIME_OUT=" + MDB_CONNECTION_TIME_OUT, "MDB_SOCKET_TIME_OUT=" + MDB_SOCKET_TIME_OUT,
                 "MDB_SERVER_TIME_OUT=" + MDB_SERVER_TIME_OUT };
-        
-        Property parameter;
-        NodeIterator objIterator;
-        Map<String, String> parameters = new HashMap<>();
- 
-        ResIterator iterator = systemParamModel.listResourcesWithProperty(RDF.type, HOBBIT.Parameter);
-        Property defaultValProperty = systemParamModel.getProperty("http://w3id.org/hobbit/vocab#defaultValue");
 
-        while (iterator.hasNext()) {
-            parameter = systemParamModel.getProperty(iterator.next().getURI());
-            objIterator = systemParamModel.listObjectsOfProperty(parameter, defaultValProperty);
-            while (objIterator.hasNext()) {
-                String value = objIterator.next().asLiteral().getString();
-                parameters.put(parameter.getLocalName(), value);
-            }
+//        Property parameter;
+//        NodeIterator objIterator;
+//        Map<String, String> parameters = new HashMap<>();
+
+//        ResIterator iterator = systemParamModel.listResourcesWithProperty(RDF.type, HOBBIT.Parameter);
+//        Property defaultValProperty = systemParamModel.getProperty("http://w3id.org/hobbit/vocab#defaultValue");
+
+        Literal workerCountLiteral = RdfHelper.getLiteral(systemParamModel, null,
+                systemParamModel.getProperty(NUMBER_WORKERS_URI));
+        if (workerCountLiteral == null) {
+            throw new IllegalStateException(
+                    "Couldn't find necessary parameter value for \"" + NUMBER_WORKERS_URI + "\". Aborting.");
         }
-        
-        LOGGER.info("PARAMETERS: " + parameters.toString());
+        numberOfWorkers = workerCountLiteral.getInt();
 
-        
+//        while (iterator.hasNext()) {
+//            parameter = systemParamModel.getProperty(iterator.next().getURI());
+//            objIterator = systemParamModel.listObjectsOfProperty(parameter, defaultValProperty);
+//            while (objIterator.hasNext()) {
+//                String value = objIterator.next().asLiteral().getString();
+//                parameters.put(parameter.getLocalName(), value);
+//            }
+//        }
+
+//        LOGGER.info("PARAMETERS: " + parameters.toString());
+
         frontierInstance = createContainer(FRONTIER_IMAGE, FRONTIER_ENV, this);
         LOGGER.debug("Squirrel frontier started");
         senderFrontier = DataSenderImpl.builder().queue(outgoingDataQueuefactory, Constants.FRONTIER_QUEUE_NAME)
@@ -107,10 +111,8 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
 
         String[] WORKER_ENV = { "HOBBIT_RABBIT_HOST=rabbit", "OUTPUT_FOLDER=/var/squirrel/data",
                 "HTML_SCRAPER_YAML_PATH=/var/squirrel/yaml",
-                "CONTEXT_CONFIG_FILE=/var/squirrel/spring-config/worker-context-sparql.xml",
-                "SPARQL_URL=" + sparqlUrl,
-                "SPARQL_HOST_USER=" + sparqlUser, "SPARQL_HOST_PASSWD=" + sparqlPwd,
-                "DEDUPLICATION_ACTIVE=false" };
+                "CONTEXT_CONFIG_FILE=/var/squirrel/spring-config/worker-context-sparql.xml", "SPARQL_URL=" + sparqlUrl,
+                "SPARQL_HOST_USER=" + sparqlUser, "SPARQL_HOST_PASSWD=" + sparqlPwd, "DEDUPLICATION_ACTIVE=false" };
         String worker;
         for (int i = 0; i < numberOfWorkers; ++i) {
             worker = createContainer(WORKER_IMAGE, WORKER_ENV, this);
