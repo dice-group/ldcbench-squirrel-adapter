@@ -6,7 +6,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 
-<https://github.com/dice-group/squirrel> a hobbit:System ;
+<http://project-hobbit.eu/ldcbench-system/Squirrel> a hobbit:System ;
     rdfs:label "Squirrel"@en;
     rdfs:comment "Linked data crawler Squirrel"@en;
     hobbit:hasParameter <http://project-hobbit.eu/ldcbench-system/numberOfWorkers> .
@@ -16,23 +16,26 @@
     rdfs:comment "The number of worker instances the crawler will use."@en ;
     rdfs:range xsd:integer .
 
-<https://github.com/dice-group/ldcbench-squirrel-adapter#System-1>	a	hobbit:SystemInstance;
+<http://project-hobbit.eu/ldcbench-system/Squirrel-1-workers>	a	hobbit:SystemInstance;
     rdfs:label	"Squirrel (1 Worker)"@en;
     rdfs:comment "Squirrel crawler instance with 1 worker"@en;
     hobbit:implementsAPI <https://github.com/dice-group/ldcbench#Api>;
+    hobbit:instanceOf <http://project-hobbit.eu/ldcbench-system/Squirrel> ;
     hobbit:imageName "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter" ;
-    <http://project-hobbit.eu/ldcbench-system/numberOfWorkers> "1"^^xsd:integer.
+    <http://project-hobbit.eu/ldcbench-system/numberOfWorkers> "1"^^xsd:integer .
 
-<https://github.com/dice-group/ldcbench-squirrel-adapter#System-3>	a	hobbit:SystemInstance;
+<http://project-hobbit.eu/ldcbench-system/Squirrel-3-workers>	a	hobbit:SystemInstance;
     rdfs:label	"Squirrel (3 Workers)"@en;
     rdfs:comment "Squirrel crawler instance with 3 workers"@en;
     hobbit:implementsAPI <https://github.com/dice-group/ldcbench#Api>;
+    hobbit:instanceOf <http://project-hobbit.eu/ldcbench-system/Squirrel> ;
     hobbit:imageName "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter" ;
-    <http://project-hobbit.eu/ldcbench-system/numberOfWorkers> "3"^^xsd:integer.
+    <http://project-hobbit.eu/ldcbench-system/numberOfWorkers> "3"^^xsd:integer .
 
-<https://github.com/dice-group/ldcbench-squirrel-adapter#System-9>	a	hobbit:SystemInstance;
+<http://project-hobbit.eu/ldcbench-system/Squirrel-9-workers>	a	hobbit:SystemInstance;
     rdfs:label	"Squirrel (9 Workers)"@en;
     rdfs:comment "Squirrel crawler instance with 9 workers"@en;
     hobbit:implementsAPI <https://github.com/dice-group/ldcbench#Api>;
+    hobbit:instanceOf <http://project-hobbit.eu/ldcbench-system/Squirrel> ;
     hobbit:imageName "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter" ;
-    <http://project-hobbit.eu/ldcbench-system/numberOfWorkers> "9"^^xsd:integer.
+    <http://project-hobbit.eu/ldcbench-system/numberOfWorkers> "9"^^xsd:integer .
