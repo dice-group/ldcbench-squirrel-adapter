@@ -2,15 +2,12 @@ package org.dice_research.ldspider.adapter.system;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.Semaphore;
 
-import org.dice_research.squirrel.data.uri.serialize.Serializer;
-import org.dice_research.squirrel.data.uri.serialize.java.GzipJavaUriSerializer;
+import org.apache.jena.rdf.model.Literal;
 import org.hobbit.core.components.AbstractSystemAdapter;
 import org.hobbit.core.components.ContainerStateObserver;
 import org.hobbit.core.rabbit.RabbitMQUtils;
+import org.hobbit.utils.rdf.RdfHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,9 +17,11 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
 
 	
 	private final static String LDSPIDER_IMAGE = "ldspider:latest";
-    private long numberOfThreads = 2;
+    private int numberOfThreads = 2;
     protected boolean terminating = false;
     protected String[] LDSPIDER_ENV;
+    public final static String NUMBER_THREADS_URI = "http://project-hobbit.eu/ldcbench-system/numberOfThreads";
+
     
     protected String ldSpiderInstance;
 
@@ -40,12 +39,21 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
         String sparqlUrl = RabbitMQUtils.readString(buffer);
         String sparqlUser = RabbitMQUtils.readString(buffer);
         String sparqlPwd = RabbitMQUtils.readString(buffer);
+        
+        
+        Literal workerCountLiteral = RdfHelper.getLiteral(systemParamModel, null,
+                systemParamModel.getProperty(NUMBER_THREADS_URI));
+        if (workerCountLiteral == null) {
+            throw new IllegalStateException(
+                    "Couldn't find necessary parameter value for \"" + NUMBER_THREADS_URI + "\". Aborting.");
+        }
+        numberOfThreads = workerCountLiteral.getInt();
         	
         LDSPIDER_ENV = new String[]{ "b=1000",
                 "oe=" + sparqlUrl,
                 "user_sparql=" + sparqlUser,
                 "passwd_sparql=" + sparqlPwd,
-                "t="+numberOfThreads+"",
+                "t="+numberOfThreads,
                 "s=seed"};
 		
         
