@@ -54,7 +54,11 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
         super.init();
         LOGGER.debug("Initializing MongoDB server...");
         mongoInstance = createContainer(MONGODB_IMAGE, CONTAINER_TYPE_SYSTEM, null);
-        LOGGER.debug("MongoDB server started");
+        if (mongoInstance == null) {
+            LOGGER.error("Error while trying to start MongoDB server.");
+            System.exit(1);
+        }
+        LOGGER.debug("MongoDB server started: {}", mongoInstance);
 
         LOGGER.debug("Initializing Squirrel Frontier...");
         String[] FRONTIER_ENV = { "HOBBIT_RABBIT_HOST=rabbit", "SEED_FILE=/var/squirrel/seeds.txt",
@@ -90,7 +94,11 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
 //        LOGGER.info("PARAMETERS: " + parameters.toString());
 
         frontierInstance = createContainer(FRONTIER_IMAGE, FRONTIER_ENV, this);
-        LOGGER.debug("Squirrel frontier started");
+        if (frontierInstance == null) {
+            LOGGER.error("Error while trying to start Squirrel frontier.");
+            System.exit(1);
+        }
+        LOGGER.debug("Squirrel frontier started: {}", frontierInstance);
         senderFrontier = DataSenderImpl.builder().queue(outgoingDataQueuefactory, Constants.FRONTIER_QUEUE_NAME)
                 .build();
         LOGGER.info("Squirrel crawler initialized and waiting for additional data...");
