@@ -9,7 +9,20 @@
 <http://project-hobbit.eu/ldcbench-system/Squirrel> a hobbit:System ;
     rdfs:label "Squirrel"@en;
     rdfs:comment "Linked data crawler Squirrel"@en;
-    hobbit:hasParameter <http://project-hobbit.eu/ldcbench-system/numberOfWorkers> .
+    hobbit:hasParameter
+      <http://project-hobbit.eu/ldcbench-system/squirrelFrontierImage>,
+      <http://project-hobbit.eu/ldcbench-system/squirrelWorkerImage>,
+      <http://project-hobbit.eu/ldcbench-system/numberOfWorkers> .
+
+<http://project-hobbit.eu/ldcbench-system/squirrelFrontierImage> a hobbit:Parameter, hobbit:FeatureParameter;
+    rdfs:label "Crawler docker image"@en;
+    rdfs:comment "Which Squirrel image to use."@en ;
+    rdfs:range xsd:string .
+
+<http://project-hobbit.eu/ldcbench-system/squirrelWorkerImage> a hobbit:Parameter, hobbit:FeatureParameter;
+    rdfs:label "Crawler docker image"@en;
+    rdfs:comment "Which Squirrel image to use."@en ;
+    rdfs:range xsd:string .
 
 <http://project-hobbit.eu/ldcbench-system/numberOfWorkers> a hobbit:Parameter, hobbit:FeatureParameter;
     rdfs:label "Number of workers"@en;
@@ -22,6 +35,8 @@
     hobbit:implementsAPI <https://github.com/dice-group/ldcbench#Api>;
     hobbit:instanceOf <http://project-hobbit.eu/ldcbench-system/Squirrel> ;
     hobbit:imageName "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter" ;
+    <http://project-hobbit.eu/ldcbench-system/squirrelFrontierImage> "dicegroup/squirrel-frontier:latest" ;
+    <http://project-hobbit.eu/ldcbench-system/squirrelWorkerImage> "dicegroup/squirrel-worker:latest" ;
     <http://project-hobbit.eu/ldcbench-system/numberOfWorkers> "1"^^xsd:integer .
 
 <http://project-hobbit.eu/ldcbench-system/Squirrel-3-workers>	a	hobbit:SystemInstance;
@@ -30,6 +45,8 @@
     hobbit:implementsAPI <https://github.com/dice-group/ldcbench#Api>;
     hobbit:instanceOf <http://project-hobbit.eu/ldcbench-system/Squirrel> ;
     hobbit:imageName "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter" ;
+    <http://project-hobbit.eu/ldcbench-system/squirrelFrontierImage> "dicegroup/squirrel-frontier:latest" ;
+    <http://project-hobbit.eu/ldcbench-system/squirrelWorkerImage> "dicegroup/squirrel-worker:latest" ;
     <http://project-hobbit.eu/ldcbench-system/numberOfWorkers> "3"^^xsd:integer .
 
 <http://project-hobbit.eu/ldcbench-system/Squirrel-9-workers>	a	hobbit:SystemInstance;
@@ -38,6 +55,8 @@
     hobbit:implementsAPI <https://github.com/dice-group/ldcbench#Api>;
     hobbit:instanceOf <http://project-hobbit.eu/ldcbench-system/Squirrel> ;
     hobbit:imageName "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter" ;
+    <http://project-hobbit.eu/ldcbench-system/squirrelFrontierImage> "dicegroup/squirrel-frontier:latest" ;
+    <http://project-hobbit.eu/ldcbench-system/squirrelWorkerImage> "dicegroup/squirrel-worker:latest" ;
     <http://project-hobbit.eu/ldcbench-system/numberOfWorkers> "9"^^xsd:integer .
 
   <http://project-hobbit.eu/ldcbench-system/Squirrel-18-workers>	a	hobbit:SystemInstance;
@@ -46,4 +65,6 @@
       hobbit:implementsAPI <https://github.com/dice-group/ldcbench#Api>;
       hobbit:instanceOf <http://project-hobbit.eu/ldcbench-system/Squirrel> ;
       hobbit:imageName "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter" ;
+      <http://project-hobbit.eu/ldcbench-system/squirrelFrontierImage> "dicegroup/squirrel-frontier:latest" ;
+      <http://project-hobbit.eu/ldcbench-system/squirrelWorkerImage> "dicegroup/squirrel-worker:latest" ;
       <http://project-hobbit.eu/ldcbench-system/numberOfWorkers> "18"^^xsd:integer .
