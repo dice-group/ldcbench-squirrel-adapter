@@ -117,10 +117,17 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
         LOGGER.info("Sparql Endpoint: " + sparqlUrl);
         LOGGER.info("Seed URIs: {}.", Arrays.toString(seedURIs));
 
-        String[] WORKER_ENV = { "HOBBIT_RABBIT_HOST=rabbit", "OUTPUT_FOLDER=/var/squirrel/data",
-                "HTML_SCRAPER_YAML_PATH=/var/squirrel/yaml",
-                "CONTEXT_CONFIG_FILE=/var/squirrel/spring-config/worker-context-sparql.xml", "SPARQL_URL=" + sparqlUrl,
-                "SPARQL_HOST_USER=" + sparqlUser, "SPARQL_HOST_PASSWD=" + sparqlPwd, "DEDUPLICATION_ACTIVE=false" };
+        String[] WORKER_ENV = {
+            "HOBBIT_RABBIT_HOST=rabbit",
+            "OUTPUT_FOLDER=/var/squirrel/data",
+            "HTML_SCRAPER_YAML_PATH=/var/squirrel/yaml",
+            "CONTEXT_CONFIG_FILE=/var/squirrel/spring-config/worker-context-sparql.xml",
+            "SPARQL_URL=" + sparqlUrl,
+            "SPARQL_HOST_USER=" + sparqlUser,
+            "SPARQL_HOST_PASSWD=" + sparqlPwd,
+            "DEDUPLICATION_ACTIVE=false",
+            "STORE_METADATA=false",
+        };
         String worker;
         for (int i = 0; i < numberOfWorkers; ++i) {
             worker = createContainer(WORKER_IMAGE, WORKER_ENV, this);
