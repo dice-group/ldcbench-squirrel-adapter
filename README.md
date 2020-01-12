@@ -1,6 +1,6 @@
 # Squirrel adapter for LDCBench
 
-The system adapter for [Squirrel](https://github.com/dice-group/ldcbench).
+The system adapter for [Squirrel](https://github.com/dice-group/squirrel).
 
 ## Building and pushing images
 
