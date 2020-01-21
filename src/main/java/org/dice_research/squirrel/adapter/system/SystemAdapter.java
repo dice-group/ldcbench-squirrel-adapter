@@ -30,9 +30,9 @@ import org.slf4j.LoggerFactory;
 public class SystemAdapter extends AbstractSystemAdapter implements ContainerStateObserver {
     private static final Logger LOGGER = LoggerFactory.getLogger(SystemAdapter.class);
 
-    private final static String FRONTIER_IMAGE = "dicegroup/squirrel-frontier:latest";
+    private final static String FRONTIER_IMAGE = "dicegroup/squirrel-frontier:orca";
     private final static String MONGODB_IMAGE = "mongo:4.0.0";
-    private final static String WORKER_IMAGE = "dicegroup/squirrel-worker:latest";
+    private final static String WORKER_IMAGE = "dicegroup/squirrel-worker:orca";
 
     public final static String NUMBER_WORKERS_URI = "http://project-hobbit.eu/ldcbench-system/numberOfWorkers";
 
