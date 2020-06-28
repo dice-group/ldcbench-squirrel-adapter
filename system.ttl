@@ -68,3 +68,23 @@
       <http://project-hobbit.eu/ldcbench-system/squirrelFrontierImage> "dicegroup/squirrel-frontier:orca" ;
       <http://project-hobbit.eu/ldcbench-system/squirrelWorkerImage> "dicegroup/squirrel-worker:orca" ;
       <http://project-hobbit.eu/ldcbench-system/numberOfWorkers> "18"^^xsd:integer .
+
+<http://project-hobbit.eu/ldcbench-system/Squirrel-pg2020-a>	a	hobbit:SystemInstance;
+    rdfs:label	"Squirrel (PG variant A)"@en;
+    rdfs:comment "Squirrel crawler instance with 1 worker"@en;
+    hobbit:implementsAPI <https://github.com/dice-group/ldcbench#Api>;
+    hobbit:instanceOf <http://project-hobbit.eu/ldcbench-system/Squirrel> ;
+    hobbit:imageName "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter" ;
+    <http://project-hobbit.eu/ldcbench-system/squirrelFrontierImage> "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter/squirrel-frontier:pg2020-a" ;
+    <http://project-hobbit.eu/ldcbench-system/squirrelWorkerImage> "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter/squirrel-worker:pg2020-a" ;
+    <http://project-hobbit.eu/ldcbench-system/numberOfWorkers> "1"^^xsd:integer .
+
+<http://project-hobbit.eu/ldcbench-system/Squirrel-pg2020-b>	a	hobbit:SystemInstance;
+    rdfs:label	"Squirrel (PG variant B)"@en;
+    rdfs:comment "Squirrel crawler instance with 1 worker"@en;
+    hobbit:implementsAPI <https://github.com/dice-group/ldcbench#Api>;
+    hobbit:instanceOf <http://project-hobbit.eu/ldcbench-system/Squirrel> ;
+    hobbit:imageName "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter" ;
+    <http://project-hobbit.eu/ldcbench-system/squirrelFrontierImage> "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter/squirrel-frontier:pg2020-b" ;
+    <http://project-hobbit.eu/ldcbench-system/squirrelWorkerImage> "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter/squirrel-worker:pg2020-b" ;
+    <http://project-hobbit.eu/ldcbench-system/numberOfWorkers> "1"^^xsd:integer .
