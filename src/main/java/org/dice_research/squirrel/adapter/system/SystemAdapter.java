@@ -30,16 +30,18 @@ import org.slf4j.LoggerFactory;
 public class SystemAdapter extends AbstractSystemAdapter implements ContainerStateObserver {
     private static final Logger LOGGER = LoggerFactory.getLogger(SystemAdapter.class);
 
-    private final static String FRONTIER_IMAGE = "dicegroup/squirrel-frontier:orca";
     private final static String MONGODB_IMAGE = "mongo:4.0.0";
-    private final static String WORKER_IMAGE = "dicegroup/squirrel-worker:orca";
 
+    public final static String FRONTIER_IMAGE_URI = "http://project-hobbit.eu/ldcbench-system/squirrelFrontierImage";
+    public final static String WORKER_IMAGE_URI = "http://project-hobbit.eu/ldcbench-system/squirrelWorkerImage";
     public final static String NUMBER_WORKERS_URI = "http://project-hobbit.eu/ldcbench-system/numberOfWorkers";
 
     protected final String MDB_CONNECTION_TIME_OUT = "5000";
     protected final String MDB_SOCKET_TIME_OUT = "10000";
     protected final String MDB_SERVER_TIME_OUT = "10000";
 
+    protected String frontierImage;
+    protected String workerImage;
     protected String mongoInstance;
     protected String frontierInstance;
     protected int numberOfWorkers;
@@ -82,6 +84,9 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
         }
         numberOfWorkers = workerCountLiteral.getInt();
 
+        frontierImage = RdfHelper.getStringValue(systemParamModel, null, systemParamModel.getProperty(FRONTIER_IMAGE_URI));
+        workerImage = RdfHelper.getStringValue(systemParamModel, null, systemParamModel.getProperty(WORKER_IMAGE_URI));
+
 //        while (iterator.hasNext()) {
 //            parameter = systemParamModel.getProperty(iterator.next().getURI());
 //            objIterator = systemParamModel.listObjectsOfProperty(parameter, defaultValProperty);
@@ -93,7 +98,7 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
 
 //        LOGGER.info("PARAMETERS: " + parameters.toString());
 
-        frontierInstance = createContainer(FRONTIER_IMAGE, FRONTIER_ENV, this);
+        frontierInstance = createContainer(frontierImage, FRONTIER_ENV, this);
         if (frontierInstance == null) {
             LOGGER.error("Error while trying to start Squirrel frontier.");
             System.exit(1);
@@ -130,7 +135,7 @@ public class SystemAdapter extends AbstractSystemAdapter implements ContainerSta
         };
         String worker;
         for (int i = 0; i < numberOfWorkers; ++i) {
-            worker = createContainer(WORKER_IMAGE, WORKER_ENV, this);
+            worker = createContainer(workerImage, WORKER_ENV, this);
             if (worker == null) {
                 LOGGER.error("Error while trying to start worker #{}. Exiting.", i);
                 System.exit(1);
