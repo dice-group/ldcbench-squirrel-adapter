@@ -35,8 +35,10 @@
     hobbit:implementsAPI <https://github.com/dice-group/ldcbench#Api>;
     hobbit:instanceOf <http://project-hobbit.eu/ldcbench-system/Squirrel> ;
     hobbit:imageName "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter" ;
-    <http://project-hobbit.eu/ldcbench-system/squirrelFrontierImage> "dicegroup/squirrel-frontier:orca" ;
-    <http://project-hobbit.eu/ldcbench-system/squirrelWorkerImage> "dicegroup/squirrel-worker:orca" ;
+    <http://project-hobbit.eu/ldcbench-system/squirrelFrontierImage> "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter/squirrel-frontier" ;
+    <http://project-hobbit.eu/ldcbench-system/squirrelWorkerImage> "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter/squirrel-worker" ;
+#    <http://project-hobbit.eu/ldcbench-system/squirrelFrontierImage> "dicegroup/squirrel-frontier:orca" ;
+#    <http://project-hobbit.eu/ldcbench-system/squirrelWorkerImage> "dicegroup/squirrel-worker:orca" ;
     <http://project-hobbit.eu/ldcbench-system/numberOfWorkers> "1"^^xsd:integer .
 
 <http://project-hobbit.eu/ldcbench-system/Squirrel-3-workers>	a	hobbit:SystemInstance;
@@ -45,8 +47,10 @@
     hobbit:implementsAPI <https://github.com/dice-group/ldcbench#Api>;
     hobbit:instanceOf <http://project-hobbit.eu/ldcbench-system/Squirrel> ;
     hobbit:imageName "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter" ;
-    <http://project-hobbit.eu/ldcbench-system/squirrelFrontierImage> "dicegroup/squirrel-frontier:orca" ;
-    <http://project-hobbit.eu/ldcbench-system/squirrelWorkerImage> "dicegroup/squirrel-worker:orca" ;
+    <http://project-hobbit.eu/ldcbench-system/squirrelFrontierImage> "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter/squirrel-frontier" ;
+    <http://project-hobbit.eu/ldcbench-system/squirrelWorkerImage> "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter/squirrel-worker" ;
+#    <http://project-hobbit.eu/ldcbench-system/squirrelFrontierImage> "dicegroup/squirrel-frontier:orca" ;
+#    <http://project-hobbit.eu/ldcbench-system/squirrelWorkerImage> "dicegroup/squirrel-worker:orca" ;
     <http://project-hobbit.eu/ldcbench-system/numberOfWorkers> "3"^^xsd:integer .
 
 <http://project-hobbit.eu/ldcbench-system/Squirrel-9-workers>	a	hobbit:SystemInstance;
@@ -55,8 +59,10 @@
     hobbit:implementsAPI <https://github.com/dice-group/ldcbench#Api>;
     hobbit:instanceOf <http://project-hobbit.eu/ldcbench-system/Squirrel> ;
     hobbit:imageName "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter" ;
-    <http://project-hobbit.eu/ldcbench-system/squirrelFrontierImage> "dicegroup/squirrel-frontier:orca" ;
-    <http://project-hobbit.eu/ldcbench-system/squirrelWorkerImage> "dicegroup/squirrel-worker:orca" ;
+    <http://project-hobbit.eu/ldcbench-system/squirrelFrontierImage> "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter/squirrel-frontier" ;
+    <http://project-hobbit.eu/ldcbench-system/squirrelWorkerImage> "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter/squirrel-worker" ;
+#    <http://project-hobbit.eu/ldcbench-system/squirrelFrontierImage> "dicegroup/squirrel-frontier:orca" ;
+#    <http://project-hobbit.eu/ldcbench-system/squirrelWorkerImage> "dicegroup/squirrel-worker:orca" ;
     <http://project-hobbit.eu/ldcbench-system/numberOfWorkers> "9"^^xsd:integer .
 
   <http://project-hobbit.eu/ldcbench-system/Squirrel-18-workers>	a	hobbit:SystemInstance;
@@ -65,6 +71,8 @@
       hobbit:implementsAPI <https://github.com/dice-group/ldcbench#Api>;
       hobbit:instanceOf <http://project-hobbit.eu/ldcbench-system/Squirrel> ;
       hobbit:imageName "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter" ;
-      <http://project-hobbit.eu/ldcbench-system/squirrelFrontierImage> "dicegroup/squirrel-frontier:orca" ;
-      <http://project-hobbit.eu/ldcbench-system/squirrelWorkerImage> "dicegroup/squirrel-worker:orca" ;
+    <http://project-hobbit.eu/ldcbench-system/squirrelFrontierImage> "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter/squirrel-frontier" ;
+    <http://project-hobbit.eu/ldcbench-system/squirrelWorkerImage> "git.project-hobbit.eu:4567/ldcbench/ldcbench-squirrel-adapter/squirrel-worker" ;
+#    <http://project-hobbit.eu/ldcbench-system/squirrelFrontierImage> "dicegroup/squirrel-frontier:orca" ;
+#    <http://project-hobbit.eu/ldcbench-system/squirrelWorkerImage> "dicegroup/squirrel-worker:orca" ;
       <http://project-hobbit.eu/ldcbench-system/numberOfWorkers> "18"^^xsd:integer .
